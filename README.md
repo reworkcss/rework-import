@@ -8,4 +8,6 @@ A `rework` plugin for reading and concatenating css that uses `@import`
     .use(imprt('your-stylesheets-dir'))
     .toString()
 
+# License
 
+MIT
