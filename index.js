@@ -9,7 +9,7 @@ module.exports = function(cwd){
   return importer
 
   function importer(style, rework){
-    var rules = []
+    var rules = rework.obj.stylesheet.rules
     var imports = style.rules.map(map).filter(filter)
     var read = []
 
