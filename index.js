@@ -1,6 +1,4 @@
 
-var colors = require('colors')
-
 module.exports = function(cwd){
   var path = require('path')
     , fs = require('graceful-fs')
