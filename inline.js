@@ -32,7 +32,7 @@ module.exports = function (cwd) {
     }
 
     function read(file) {
-        var data = fs.readFileSync(file);
+        var data = fs.readFileSync(file, 'utf8');
         var style = css.parse(data).stylesheet;
 
         return style;

@@ -9,8 +9,8 @@ var rework = require('rework');
 
 describe('inline()', function () {
     it('should import stylsheets', function () {
-        var original = fs.readFileSync(path.join(__dirname, 'fixtures/original.css'));
-        var expected = fs.readFileSync(path.join(__dirname, 'fixtures/expected.css'));
+        var original = fs.readFileSync(path.join(__dirname, 'fixtures/original.css'), 'utf8');
+        var expected = fs.readFileSync(path.join(__dirname, 'fixtures/expected.css'), 'utf8');
         var css = rework(original)
             .use(inline(path.join(__dirname, 'fixtures')))
             .toString();
