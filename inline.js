@@ -51,8 +51,19 @@ module.exports = function (cwd) {
             var media = rule.import.replace(re, '').replace(' ', '');
             var file = check(imprt);
             var data = read(file);
+            var res;
 
-            rules = rules.concat(data.rules);
+            if (media === '') {
+                res = data.rules;
+            } else {
+                res = {
+                    type: 'media',
+                    media: media,
+                    rules: data.rules
+                };
+            }
+
+            rules = rules.concat(res);
         });
 
         style.rules = rules;
