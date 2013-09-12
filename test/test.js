@@ -12,7 +12,7 @@ describe('inline()', function () {
         var original = fs.readFileSync(path.join(__dirname, 'fixtures/original.css'));
         var expected = fs.readFileSync(path.join(__dirname, 'fixtures/expected.css'));
         var css = rework(original)
-            .use(inline([path.join(__dirname, 'fixtures')]))
+            .use(inline(path.join(__dirname, 'fixtures')))
             .toString();
 
         assert.equal(css, expected);
