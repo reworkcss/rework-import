@@ -71,7 +71,7 @@ module.exports = function (cwd) {
             var data = read(file);
             var res;
 
-            if (media === '') {
+            if (!media || !media.length) {
                 res = data.rules;
             } else {
                 res = {
