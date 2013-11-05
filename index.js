@@ -17,6 +17,7 @@ var path = require('path');
 function Import(style, opts) {
     this.opts = opts || {};
     this.opts.path = (typeof opts.path === 'string' ? [opts.path] : (opts.path || [process.cwd()]));
+    this.opts.preprocesser = opts.preprocesser || function(value) { return value };;
     this.rules = style.rules || [];
 }
 
@@ -75,7 +76,7 @@ Import.prototype.process = function () {
  */
 
 Import.prototype._read = function (file) {
-    var data = fs.readFileSync(file, this.opts.encoding || 'utf8');
+    var data = this.opts.preprocesser(fs.readFileSync(file, this.opts.encoding || 'utf8'), file);
     var style = css.parse(data).stylesheet;
 
     return style;
