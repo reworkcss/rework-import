@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "description": "Inline stylesheets using @import",
   "keywords": [
-    "extract",
-    "zip",
-    "tar",
-    "tar.gz"
+    "css",
+    "import",
+    "media",
+    "rework"
   ],
   "homepage": "https://github.com/kevva/rework-inline",
   "bugs": "https://github.com/kevva/rework-inline/issues",
@@ -25,7 +25,8 @@
     "inline.js"
   ],
   "dependencies": {
-    "css": "~1.4.1"
+    "css": "~1.4.1",
+    "css-whitespace": "~1.1.0"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

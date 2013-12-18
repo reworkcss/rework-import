@@ -36,10 +36,16 @@ body {
 
 ## API
 
-### inline(cwd)
+### inline(opts)
 
-Import stylesheets using `@import` and an optional media query. Pass in an array 
-of paths to `cwd` in which to search for files.
+Import stylesheets using `@import` and an optional media query. Pass a string or 
+an array of paths to the `path` option in where to search for stylesheets.
+
+## Options
+
+* `encoding` — Use if your CSS is encoded in anything other than UTF-8
+* `path` — A string or an array of paths in where to look for files
+* `whitespace` — Set to true if you're using [whitespace significant CSS](https://npmjs.org/package/css-whitespace)
 
 ## License
 
