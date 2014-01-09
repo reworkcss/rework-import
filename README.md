@@ -43,9 +43,26 @@ an array of paths to the `path` option in where to search for stylesheets.
 
 ## Options
 
-* `encoding` — Use if your CSS is encoded in anything other than UTF-8
-* `path` — A string or an array of paths in where to look for files
-* `whitespace` — Set to true if you're using [whitespace significant CSS](https://npmjs.org/package/css-whitespace)
+### encoding
+
+Type: `String`  
+Default: `utf8`
+
+Use if your CSS is encoded in anything other than UTF-8.
+
+### path
+
+Type: `String|Array`  
+Default: `process.cwd()`
+
+A string or an array of paths in where to look for files.
+
+### whitespace
+
+Type: `Boolean`  
+Default: `false`
+
+Set to true if you're using [whitespace significant CSS](https://npmjs.org/package/css-whitespace).
 
 ## License
 
