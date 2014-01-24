@@ -57,13 +57,6 @@ Default: `process.cwd()`
 
 A string or an array of paths in where to look for files.
 
-### whitespace
-
-Type: `Boolean`  
-Default: `false`
-
-Set to true if you're using [whitespace significant CSS](https://npmjs.org/package/css-whitespace).
-
 ## License
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License) (c) [Kevin Mårtensson](http://kevinmartensson.com)

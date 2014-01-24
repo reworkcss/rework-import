@@ -3,7 +3,6 @@
 var css = require('css');
 var fs = require('fs');
 var path = require('path');
-var whitespace = require('css-whitespace');
 
 /**
  * Inline stylesheet using `@import`
@@ -71,10 +70,6 @@ Import.prototype.process = function () {
 Import.prototype._read = function (file) {
     var data = fs.readFileSync(file, this.opts.encoding || 'utf8');
     var style;
-
-    if (this.opts.whitespace) {
-        data = whitespace(data);
-    }
 
     style = css.parse(data).stylesheet;
 
