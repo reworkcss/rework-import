@@ -3,7 +3,7 @@
 
 var assert = require('assert');
 var fs = require('fs');
-var inline = require('../inline');
+var inline = require('../index');
 var path = require('path');
 var rework = require('rework');
 

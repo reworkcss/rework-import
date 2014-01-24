@@ -20,9 +20,9 @@
   "scripts": {
     "test": "mocha --reporter list"
   },
-  "main": "inline.js",
+  "main": "index.js",
   "files": [
-    "inline.js"
+    "index.js"
   ],
   "dependencies": {
     "css": "~1.4.1",
