@@ -26,7 +26,8 @@
   ],
   "dependencies": {
     "css": "~1.4.1",
-    "css-whitespace": "~1.1.0"
+    "css-whitespace": "~1.1.0",
+    "find-file": "~0.1.0"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

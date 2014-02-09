@@ -1,6 +1,7 @@
 'use strict';
 
 var css = require('css');
+var findFile = require('find-file');
 var fs = require('fs');
 var path = require('path');
 
@@ -69,9 +70,7 @@ Import.prototype.process = function () {
 
 Import.prototype._read = function (file) {
     var data = fs.readFileSync(file, this.opts.encoding || 'utf8');
-    var style;
-
-    style = css.parse(data).stylesheet;
+    var style = css.parse(data).stylesheet;
 
     return style;
 };
@@ -84,7 +83,6 @@ Import.prototype._read = function (file) {
  */
 
 Import.prototype._check = function (name) {
-    this.path = Array.isArray(this.path) ? this.path : [this.path];
     var file;
 
     name = name
@@ -93,9 +91,7 @@ Import.prototype._check = function (name) {
         .replace(/^("|\')/, '')
         .replace(/("|\')$/, '');
 
-    file = this.path.map(function (dir) {
-        return path.join(dir, name);
-    }).filter(fs.existsSync)[0];
+    file = findFile(name, this.path, false)[0];
 
     if (!file) {
         throw new Error('failed to find ' + name);
