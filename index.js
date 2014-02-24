@@ -3,7 +3,7 @@
 var css = require('css');
 var findFile = require('find-file');
 var fs = require('fs');
-var path = require('path');
+var parseImport = require('parse-import');
 
 /**
  * Inline stylesheet using `@import`
@@ -31,27 +31,25 @@ Import.prototype.process = function () {
     var self = this;
 
     this.rules.forEach(function (rule) {
-        var data;
-        var file;
-        var media;
-        var regex = /(url\s?\()?(\'|")(.*)(\'|")(\))?/g;
-        var res;
-
         if (rule.type !== 'import') {
             return rules.push(rule);
         }
 
-        media = rule.import.replace(regex, '').replace(' ', '');
-        file = self._check(rule.import.match(regex).toString());
-        data = self._read(file);
+        var content;
+        var data = parseImport(rule.import);
+        var file = self._check(data.path);
+        var media = data.condition;
+        var res;
+
+        content = self._read(file);
 
         if (!media || !media.length) {
-            res = data.rules;
+            res = content.rules;
         } else {
             res = {
                 type: 'media',
                 media: media,
-                rules: data.rules
+                rules: content.rules
             };
         }
 
@@ -83,15 +81,7 @@ Import.prototype._read = function (file) {
  */
 
 Import.prototype._check = function (name) {
-    var file;
-
-    name = name
-        .replace(/^url\s?\(/, '')
-        .replace(/\)$/, '')
-        .replace(/^("|\')/, '')
-        .replace(/("|\')$/, '');
-
-    file = findFile(name, this.path, false)[0];
+    var file = findFile(name, this.path, false)[0];
 
     if (!file) {
         throw new Error('failed to find ' + name);

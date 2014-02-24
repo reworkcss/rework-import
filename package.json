@@ -26,7 +26,8 @@
   ],
   "dependencies": {
     "css": "~1.6.0",
-    "find-file": "~0.1.0"
+    "find-file": "~0.1.0",
+    "parse-import": "~0.1.0"
   },
   "devDependencies": {
     "mocha": "~1.17.1",
