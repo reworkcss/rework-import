@@ -81,7 +81,7 @@ Import.prototype._read = function (file) {
  */
 
 Import.prototype._check = function (name) {
-    var file = findFile(name, this.path, false)[0];
+    var file = findFile(name, { path: this.path, global: false })[0];
 
     if (!file) {
         throw new Error('failed to find ' + name);
