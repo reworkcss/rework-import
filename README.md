@@ -1,12 +1,14 @@
 # rework-inline [![Build Status](https://secure.travis-ci.org/kevva/rework-inline.png?branch=master)](http://travis-ci.org/kevva/rework-inline)
 
-Inline stylesheets using `@import`.
+> Inline stylesheets using `@import`.
 
 ## Getting started
 
-Install with [npm](https://npmjs.org/package/rework-inline): `npm install rework-inline`
+```bash
+$ npm install --save rework-inline
+```
 
-## Examples
+## Usage
 
 ```css
 @import "foo.css" (min-width: 25em);
@@ -38,7 +40,7 @@ body {
 
 ### inline(opts)
 
-Import stylesheets using `@import` and an optional media query. Pass a string or 
+Import stylesheets using `@import` and an optional media query. Pass a string or
 an array of paths to the `path` option in where to search for stylesheets.
 
 ## Options
@@ -59,4 +61,4 @@ A string or an array of paths in where to look for files.
 
 ## License
 
-[MIT License](http://en.wikipedia.org/wiki/MIT_License) (c) [Kevin Mårtensson](http://kevinmartensson.com)
+[MIT License](http://en.wikipedia.org/wiki/MIT_License) © [Kevin Mårtensson](http://kevinmartensson.com)
