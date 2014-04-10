@@ -1,4 +1,4 @@
-# rework-inline [![Build Status](https://secure.travis-ci.org/kevva/rework-inline.png?branch=master)](http://travis-ci.org/kevva/rework-inline)
+# rework-inline [![Build Status](https://travis-ci.org/kevva/rework-inline.svg?branch=master)](https://travis-ci.org/kevva/rework-inline)
 
 > Inline stylesheets using `@import`.
 
