@@ -1,8 +1,8 @@
 # rework-inline [![Build Status](https://travis-ci.org/kevva/rework-inline.svg?branch=master)](https://travis-ci.org/kevva/rework-inline)
 
-> Inline stylesheets using `@import`.
+> Inline stylesheets using `@import`
 
-## Getting started
+## Install
 
 ```bash
 $ npm install --save rework-inline
@@ -61,4 +61,4 @@ A string or an array of paths in where to look for files.
 
 ## License
 
-[MIT License](http://en.wikipedia.org/wiki/MIT_License) © [Kevin Mårtensson](http://kevinmartensson.com)
+MIT © [Kevin Mårtensson](http://kevinmartensson.com)
