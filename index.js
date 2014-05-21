@@ -81,13 +81,13 @@ Import.prototype._read = function (file) {
  */
 
 Import.prototype._check = function (name) {
-    var file = findFile(name, { path: this.path, global: false })[0];
+    var file = findFile(name, { path: this.path, global: false });
 
     if (!file) {
         throw new Error('failed to find ' + name);
     }
 
-    return file;
+    return file[0];
 };
 
 /**
