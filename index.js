@@ -43,6 +43,8 @@ Import.prototype.process = function () {
 
         content = self._read(file);
 
+        parseStyle(content, self.opts)
+
         if (!media || !media.length) {
             res = content.rules;
         } else {
@@ -91,14 +93,24 @@ Import.prototype._check = function (name) {
 };
 
 /**
+ * parse @import in given style
+ * @param {Object} style
+ * @param {Object} opts
+ */
+function parseStyle(style, opts) {
+  var inline = new Import(style, opts);
+  var rules = inline.process();
+
+  style.rules = rules;
+}
+
+
+/**
  * Module exports
  */
 
 module.exports = function (opts) {
-    return function (style) {
-        var inline = new Import(style, opts);
-        var rules = inline.process();
-
-        style.rules = rules;
+    return function(style) {
+      parseStyle(style, opts)
     };
 };
