@@ -1,6 +1,6 @@
 {
   "name": "rework-inline",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Inline stylesheets using @import",
   "license": "MIT",
   "repository": "kevva/rework-inline",
