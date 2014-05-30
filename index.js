@@ -35,13 +35,11 @@ Import.prototype.process = function () {
             return rules.push(rule);
         }
 
-        var content;
         var data = parseImport(rule.import);
         var file = self._check(data.path);
         var media = data.condition;
         var res;
-
-        content = self._read(file);
+        var content = self._read(file);
 
         parseStyle(content, self.opts)
 
@@ -93,15 +91,16 @@ Import.prototype._check = function (name) {
 };
 
 /**
- * parse @import in given style
+ * Parse @import in given style
+ *
  * @param {Object} style
  * @param {Object} opts
  */
 function parseStyle(style, opts) {
-  var inline = new Import(style, opts);
-  var rules = inline.process();
+    var inline = new Import(style, opts);
+    var rules = inline.process();
 
-  style.rules = rules;
+    style.rules = rules;
 }
 
 
@@ -110,7 +109,7 @@ function parseStyle(style, opts) {
  */
 
 module.exports = function (opts) {
-    return function(style) {
-      parseStyle(style, opts)
+    return function (style) {
+        parseStyle(style, opts)
     };
 };

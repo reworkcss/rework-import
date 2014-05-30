@@ -18,4 +18,15 @@ describe('inline()', function () {
 
         assert.equal(css, expected);
     });
+
+    it('should import stylsheets recursively', function () {
+        var original = fs.readFileSync(path.join(__dirname, 'fixtures/original-recursive.css'), 'utf8');
+        var expected = fs.readFileSync(path.join(__dirname, 'fixtures/expected-recursive.css'), 'utf8');
+
+        var css = rework(original)
+            .use(inline({ path: path.join(__dirname, 'fixtures') }))
+            .toString();
+
+        assert.equal(css, expected);
+    });
 });
