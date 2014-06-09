@@ -2,6 +2,7 @@
 
 Import stylesheets using `@import` and an optional media query. Pass a string or
 an array of paths to the `path` option in where to search for stylesheets.
+Handle recursive & relative imports.
 
 ## Install
 
@@ -36,6 +37,7 @@ Type: `String|Array`
 Default: `process.cwd()`
 
 A string or an array of paths in where to look for files.
+_Note: this is mainly used for the first level import. Nested `@import` will also benefit of the relative dirname of imported files._
 
 ## What to expect
 
