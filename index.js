@@ -1,9 +1,26 @@
 'use strict';
 
+var path = require('path');
+
 var css = require('css');
 var findFile = require('find-file');
 var fs = require('graceful-fs');
 var parseImport = require('parse-import');
+
+function clone(obj) {
+  if (null === obj || "object" != typeof obj) {
+    return obj;
+  }
+
+  var copy = obj.constructor();
+  for (var attr in obj) {
+    if (obj.hasOwnProperty(attr)) {
+      copy[attr] = obj[attr];
+    }
+  }
+  return copy;
+}
+
 
 /**
  * Inline stylesheet using `@import`
@@ -37,11 +54,19 @@ Import.prototype.process = function () {
 
         var data = parseImport(rule.import);
         var file = self._check(data.path);
+
+        var dirname = path.dirname(file);
+        var opts = clone(self.opts);
+        opts.path = typeof opts.path === 'string' ? [opts.path] : opts.path;
+        if (opts.path.indexOf(dirname) === -1 ) {
+            opts.path.push(dirname);
+        }
+
         var media = data.condition;
         var res;
         var content = self._read(file);
 
-        parseStyle(content, self.opts)
+        parseStyle(content, opts)
 
         if (!media || !media.length) {
             res = content.rules;
