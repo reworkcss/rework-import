@@ -3,28 +3,40 @@
   "version": "0.0.3",
   "description": "A rework plugin to read and inline css via @import",
   "main": "index.js",
-  "directories": {
-    "test": "test"
+  "files": [
+    "index.js"
+  ],
+  "repository": "jxson/rework-import",
+  "authors": [
+    "Jason Campbell <jason@js.la>",
+    {
+      "name": "Kevin Mårtensson",
+      "email": "kevinmartensson@gmail.com",
+      "url": "https://github.com/kevva"
+    },
+    "Maxime Thirouin <m@moox.io>"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "mocha test/test-*"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/jxson/rework-import.git"
+    "test": "mocha --reporter list"
   },
   "keywords": [
     "css",
     "import",
+    "media",
     "rework"
   ],
-  "author": "Jason Campbell <jason@js.la>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/jxson/rework-import/issues"
-  },
   "dependencies": {
+    "css": "^1.6.0",
+    "find-file": "^0.1.0",
     "graceful-fs": "~2.0.0",
-    "css": "~1.4.1"
+    "parse-import": "^0.1.0"
+  },
+  "devDependencies": {
+    "mocha": "^1.18.2",
+    "rework": "^0.20.2"
   }
 }

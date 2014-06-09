@@ -1,72 +1,115 @@
+'use strict';
 
-module.exports = function(cwd){
-  var path = require('path')
-    , fs = require('graceful-fs')
-    , css = require('css')
+var css = require('css');
+var findFile = require('find-file');
+var fs = require('graceful-fs');
+var parseImport = require('parse-import');
 
-  cwd = path.resolve(cwd)
+/**
+ * Inline stylesheet using `@import`
+ *
+ * @param {Object} style
+ * @param {Object} opts
+ * @api public
+ */
 
-  return function(style){
-    expand(style)
-  }
+function Import(style, opts) {
+    opts = opts || {};
+    this.opts = opts;
+    this.path = opts.path || process.cwd();
+    this.rules = style.rules || [];
+}
 
-  // checks for imports and reads/ exands them into the style.rules
-  function expand(style){
-    var rules = []
+/**
+ * Process stylesheet
+ *
+ * @api public
+ */
 
-    for (var i = 0; i < style.rules.length; i++){
-      var rule = style.rules[i]
-        , isNotImport = rule.type !== 'import'
+Import.prototype.process = function () {
+    var rules = [];
+    var self = this;
 
-      if (isNotImport || !filename(rule.import)) {
-        rules.push(rule)
-        continue
-      }
+    this.rules.forEach(function (rule) {
+        if (rule.type !== 'import') {
+            return rules.push(rule);
+        }
 
-      var expanded = scan(filename(rule.import))
-      rules = rules.concat(expanded.rules)
+        var data = parseImport(rule.import);
+        var file = self._check(data.path);
+        var media = data.condition;
+        var res;
+        var content = self._read(file);
+
+        parseStyle(content, self.opts)
+
+        if (!media || !media.length) {
+            res = content.rules;
+        } else {
+            res = {
+                type: 'media',
+                media: media,
+                rules: content.rules
+            };
+        }
+
+        rules = rules.concat(res);
+    });
+
+    return rules;
+};
+
+/**
+ * Read the contents of a file
+ *
+ * @param {String} file
+ * @api private
+ */
+
+Import.prototype._read = function (file) {
+    var data = fs.readFileSync(file, this.opts.encoding || 'utf8');
+    var style = css.parse(data).stylesheet;
+
+    return style;
+};
+
+/**
+ * Check if a file exists
+ *
+ * @param {String} name
+ * @api private
+ */
+
+Import.prototype._check = function (name) {
+    var file = findFile(name, { path: this.path, global: false });
+
+    if (!file) {
+        throw new Error('failed to find ' + name);
     }
 
-    style.rules = rules
+    return file[0];
+};
 
-    if (hasImports(style)) expand(style)
-  }
+/**
+ * Parse @import in given style
+ *
+ * @param {Object} style
+ * @param {Object} opts
+ */
+function parseStyle(style, opts) {
+    var inline = new Import(style, opts);
+    var rules = inline.process();
 
-  function hasImports(style){
-    var imports = style
-        .rules
-        .filter(function(rule){
-          return rule.type === 'import'
-        })
-
-    return !! imports.length
-  }
-
-  function scan(filename){
-    var data = fs.readFileSync(filename, 'utf8')
-    var style = css.parse(data).stylesheet
-
-    return style
-  }
-
-  function filename(id){
-    // ignore imports that are urls
-    if (/^\s*http/.test(id)) return
-
-    var file = id
-        // extract from url(<filename>)
-        .replace(/^url\(/, '')
-        .replace(/\)$/, '')
-        // extract from single and double quotes
-        .replace(/^("|\')/, '')
-        .replace(/("|\')$/, '')
-
-    // append .css if it's missing
-    if (path.extname(file) === '') file += '.css'
-
-    // resolve against the cwd
-    file = path.resolve(cwd, file)
-
-    return file
-  }
+    style.rules = rules;
 }
+
+
+/**
+ * Module exports
+ */
+
+module.exports = function (opts) {
+    return function (style) {
+        parseStyle(style, opts)
+    };
+};
