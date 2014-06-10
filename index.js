@@ -31,9 +31,8 @@ function clone(obj) {
  */
 
 function Import(style, opts) {
-    opts = opts || {};
-    this.opts = opts;
-    this.path = opts.path || process.cwd();
+    this.opts = opts || {};
+    this.opts.path = (typeof opts.path === 'string' ? [opts.path] : (opts.path || [process.cwd()]));
     this.rules = style.rules || [];
 }
 
@@ -53,19 +52,17 @@ Import.prototype.process = function () {
         }
 
         var data = parseImport(rule.import);
-        var file = self._check(data.path);
-
-        var dirname = path.dirname(file);
         var opts = clone(self.opts);
-        opts.path = typeof opts.path === 'string' ? [opts.path] : opts.path;
+        opts.file = self._check(data.path, self.opts.path);
+        var dirname = path.dirname(opts.file);
         if (opts.path.indexOf(dirname) === -1 ) {
-            opts.path.push(dirname);
+            opts.path = opts.path.slice()
+            opts.path.unshift(dirname);
         }
 
         var media = data.condition;
         var res;
-        var content = self._read(file);
-
+        var content = self._read(opts.file);
         parseStyle(content, opts)
 
         if (!media || !media.length) {
@@ -106,10 +103,11 @@ Import.prototype._read = function (file) {
  */
 
 Import.prototype._check = function (name) {
-    var file = findFile(name, { path: this.path, global: false });
+    var file = findFile(name, { path: this.opts.path, global: false });
 
     if (!file) {
-        throw new Error('failed to find ' + name);
+        //@todo handle a stack trace of the import ?
+        throw new Error('failed to find ' + name + (opts.file ? " (from " + opts.file + ")" : "") + " in [ " + this.opts.path.join(", ") + " ]");
     }
 
     return file[0];

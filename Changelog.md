@@ -7,6 +7,7 @@ Merge with [rework-inline](https://www.npmjs.org/package/rework-inline) bring th
 * Use [find-file](https://www.npmjs.org/package/find-file) to lookup imports
 * Automated tests
 * relative `@import`
+* better error reporting
 
 # 0.0.3 / 2013-08-07
 
