@@ -107,7 +107,7 @@ Import.prototype._check = function (name) {
 
     if (!file) {
         //@todo handle a stack trace of the import ?
-        throw new Error('failed to find ' + name + (opts.file ? " (from " + opts.file + ")" : "") + " in [ " + this.opts.path.join(", ") + " ]");
+        throw new Error('failed to find ' + name + (this.opts.file ? " (from " + this.opts.file + ")" : "") + " in [ " + this.opts.path.join(", ") + " ]");
     }
 
     return file[0];
