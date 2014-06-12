@@ -1,26 +1,10 @@
 'use strict';
 
-var path = require('path');
-
 var css = require('css');
 var findFile = require('find-file');
 var fs = require('graceful-fs');
 var parseImport = require('parse-import');
-
-function clone(obj) {
-  if (null === obj || "object" != typeof obj) {
-    return obj;
-  }
-
-  var copy = obj.constructor();
-  for (var attr in obj) {
-    if (obj.hasOwnProperty(attr)) {
-      copy[attr] = obj[attr];
-    }
-  }
-  return copy;
-}
-
+var path = require('path');
 
 /**
  * Inline stylesheet using `@import`
@@ -55,15 +39,17 @@ Import.prototype.process = function () {
         var opts = clone(self.opts);
         opts.file = self._check(data.path, self.opts.path);
         var dirname = path.dirname(opts.file);
+
         if (opts.path.indexOf(dirname) === -1 ) {
-            opts.path = opts.path.slice()
+            opts.path = opts.path.slice();
             opts.path.unshift(dirname);
         }
 
         var media = data.condition;
         var res;
         var content = self._read(opts.file);
-        parseStyle(content, opts)
+
+        parseStyle(content, opts);
 
         if (!media || !media.length) {
             res = content.rules;
@@ -107,7 +93,7 @@ Import.prototype._check = function (name) {
 
     if (!file) {
         //@todo handle a stack trace of the import ?
-        throw new Error('failed to find ' + name + (this.opts.file ? " (from " + this.opts.file + ")" : "") + " in [ " + this.opts.path.join(", ") + " ]");
+        throw new Error('failed to find ' + name + (this.opts.file ? ' (from ' + this.opts.file + ')' : '') + ' in [ ' + this.opts.path.join(', ') + ' ]');
     }
 
     return file[0];
@@ -119,6 +105,7 @@ Import.prototype._check = function (name) {
  * @param {Object} style
  * @param {Object} opts
  */
+
 function parseStyle(style, opts) {
     var inline = new Import(style, opts);
     var rules = inline.process();
@@ -126,6 +113,26 @@ function parseStyle(style, opts) {
     style.rules = rules;
 }
 
+/**
+ * Clone object
+ *
+ * @param {Object} obj
+ */
+
+function clone(obj) {
+    if (obj === null || obj !== typeof 'object' ) {
+        return obj;
+    }
+
+    var copy = obj.constructor();
+        for (var attr in obj) {
+            if (obj.hasOwnProperty(attr)) {
+            copy[attr] = obj[attr];
+        }
+    }
+
+    return copy;
+}
 
 /**
  * Module exports
@@ -133,6 +140,6 @@ function parseStyle(style, opts) {
 
 module.exports = function (opts) {
     return function (style) {
-        parseStyle(style, opts)
+        parseStyle(style, opts);
     };
 };
