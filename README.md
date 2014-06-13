@@ -1,4 +1,4 @@
-# rework-import [![Build Status](https://travis-ci.org/kevva/rework-inline.svg?branch=master)](https://travis-ci.org/kevva/rework-inline)
+# rework-import [![Build Status](https://travis-ci.org/reworkcss/rework-import.svg?branch=master)](https://travis-ci.org/reworkcss/rework-import)
 
 Import stylesheets using `@import` and an optional media query. Pass a string or
 an array of paths to the `path` option in where to search for stylesheets.
@@ -15,11 +15,11 @@ $ npm install --save rework-import
 As a Rework plugin:
 
 ```js
-var imprt = require("rework-import")
+var imprt = require('rework-import');
 
 rework(data)
-    .use(imprt("your-stylesheets-dir"))
-    .toString()
+    .use(imprt('your-stylesheets-dir'))
+    .toString();
 ```
 
 ### Options
@@ -69,4 +69,4 @@ body {
 
 ## License
 
-MIT © [Jason Campbell](https://github.com/jxson) & [Kevin Mårtensson](http://kevinmartensson.com)
+MIT © [Jason Campbell](https://github.com/jxson) and [Kevin Mårtensson](http://github.com/kevva)
