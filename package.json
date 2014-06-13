@@ -1,7 +1,7 @@
 {
   "name": "rework-import",
   "version": "0.0.3",
-  "description": "A rework plugin to read and inline css via @import",
+  "description": "A rework plugin to read and inline css files via @import",
   "main": "index.js",
   "files": [
     "index.js"
