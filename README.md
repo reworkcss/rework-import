@@ -18,7 +18,7 @@ As a Rework plugin:
 var imprt = require('rework-import');
 
 rework(data)
-    .use(imprt('your-stylesheets-dir'))
+    .use(imprt({ path: ['your-stylesheets-dir'] }))
     .toString();
 ```
 
