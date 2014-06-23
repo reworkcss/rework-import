@@ -17,13 +17,22 @@ As a Rework plugin:
 ```js
 var imprt = require('rework-import');
 
-rework(data).use(imprt({
-    path: 'your-stylesheets-dir',
-    preprocesser: require('css-whitespace')
-})).toString();
-
+// simple usage
 rework(data)
-    .use(imprt({ path: ['your-stylesheets-dir'] }))
+    .use(imprt({path: 'path/to/your/stylsheets'}))
+    .toString();
+
+// using multiples paths
+rework(data)
+    .use(imprt({path: [
+        'path/to/your/stylsheets',
+        'node_modules',
+    ]}))
+    .toString();
+
+// with css-whitespace
+rework(data)
+    .use(imprt({preprocesser: require('css-whitespace')}))
     .toString();
 ```
 
@@ -49,7 +58,8 @@ _Note: this is mainly used for the first level import. Nested `@import` will als
 Type: `Function`  
 Default: `null`
 
-Use if you need preprocess the file content. For example `css-whitespace`.
+A function to preprocess the content of imported files. Take one argument (file content) & should return the modified content.  
+Useful if you use [`css-whitespace`](https://github.com/reworkcss/css-whitespace).
 
 ## What to expect
 
