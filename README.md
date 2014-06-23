@@ -17,6 +17,11 @@ As a Rework plugin:
 ```js
 var imprt = require('rework-import');
 
+rework(data).use(imprt({
+    path: 'your-stylesheets-dir',
+    preprocesser: require('css-whitespace')
+})).toString();
+
 rework(data)
     .use(imprt({ path: ['your-stylesheets-dir'] }))
     .toString();
@@ -38,6 +43,13 @@ Default: `process.cwd()`
 
 A string or an array of paths in where to look for files.
 _Note: this is mainly used for the first level import. Nested `@import` will also benefit of the relative dirname of imported files._
+
+#### preprocesser
+
+Type: `Function`  
+Default: `null`
+
+Use if you need preprocess the file content. For example `css-whitespace`.
 
 ## What to expect
 

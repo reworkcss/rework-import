@@ -42,4 +42,18 @@ describe('imprt()', function () {
 
         assert.equal(css, expected);
     });
+
+    it('should support preprocesser', function () {
+        var original = fs.readFileSync(path.join(__dirname, 'fixtures/original-preprocesser.css'), 'utf8');
+        var expected = fs.readFileSync(path.join(__dirname, 'fixtures/expected-preprocesser.css'), 'utf8');
+
+        var css = rework(original)
+            .use(imprt({
+                path: path.join(__dirname, 'fixtures'),
+                preprocesser: require("css-whitespace")
+            }))
+            .toString();
+
+        assert.equal(css, expected);
+    });
 });
