@@ -1,4 +1,4 @@
-# Unreleased / 2014-07-xx
+# 1.0.0 / 2014-07-14
 
 Merge with [rework-inline](https://www.npmjs.org/package/rework-inline) bring the following:
 
