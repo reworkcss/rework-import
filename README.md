@@ -32,7 +32,7 @@ rework(data)
 
 // with css-whitespace
 rework(data)
-    .use(imprt({preprocesser: require('css-whitespace')}))
+    .use(imprt({transform: require('css-whitespace')}))
     .toString();
 ```
 
@@ -53,12 +53,12 @@ Default: `process.cwd()`
 A string or an array of paths in where to look for files.
 _Note: this is mainly used for the first level import. Nested `@import` will also benefit of the relative dirname of imported files._
 
-#### preprocesser
+#### transform
 
 Type: `Function`  
 Default: `null`
 
-A function to preprocess the content of imported files. Take one argument (file content) & should return the modified content.  
+A function to transform the content of imported files. Take one argument (file content) & should return the modified content.  
 Useful if you use [`css-whitespace`](https://github.com/reworkcss/css-whitespace).
 
 ## What to expect

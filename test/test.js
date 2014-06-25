@@ -43,14 +43,14 @@ describe('imprt()', function () {
         assert.equal(css, expected);
     });
 
-    it('should support preprocesser', function () {
-        var original = fs.readFileSync(path.join(__dirname, 'fixtures/original-preprocesser.css'), 'utf8');
-        var expected = fs.readFileSync(path.join(__dirname, 'fixtures/expected-preprocesser.css'), 'utf8');
+    it('should support transform', function () {
+        var original = fs.readFileSync(path.join(__dirname, 'fixtures/original-transform.css'), 'utf8');
+        var expected = fs.readFileSync(path.join(__dirname, 'fixtures/expected-transform.css'), 'utf8');
 
         var css = rework(original)
             .use(imprt({
                 path: path.join(__dirname, 'fixtures'),
-                preprocesser: require("css-whitespace")
+                transform: require("css-whitespace")
             }))
             .toString();
 
