@@ -1,7 +1,8 @@
 # 1.1.0 / 2014-07-25
 
-* `transform` option (mainly to use [`css-whitespace`](https://github.com/reworkcss/css-whitespace))
+* better automatic path (using rework/css.parse source option)
 * better stack trace
+* `transform` option (mainly to use [`css-whitespace`](https://github.com/reworkcss/css-whitespace))
 
 # 1.0.0 / 2014-07-14
 
