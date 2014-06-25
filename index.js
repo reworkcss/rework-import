@@ -38,8 +38,8 @@ Import.prototype.process = function () {
 
         var data = parseImport(rule.import);
         var opts = clone(self.opts);
-        opts.file = self._check(data.path, self.opts.path);
-        var dirname = path.dirname(opts.file);
+        opts.source = self._check(data.path, rule.position ? rule.position.source : undefined);
+        var dirname = path.dirname(opts.source);
 
         if (opts.path.indexOf(dirname) === -1 ) {
             opts.path = opts.path.slice();
@@ -48,7 +48,7 @@ Import.prototype.process = function () {
 
         var media = data.condition;
         var res;
-        var content = self._read(opts.file);
+        var content = self._read(opts.source);
 
         parseStyle(content, opts);
 
@@ -77,7 +77,7 @@ Import.prototype.process = function () {
 
 Import.prototype._read = function (file) {
     var data = this.opts.transform(fs.readFileSync(file, this.opts.encoding || 'utf8'), file);
-    var style = css.parse(data).stylesheet;
+    var style = css.parse(data, {source: file}).stylesheet;
 
     return style;
 };
@@ -89,12 +89,16 @@ Import.prototype._read = function (file) {
  * @api private
  */
 
-Import.prototype._check = function (name) {
+Import.prototype._check = function (name, source) {
     var file = findFile(name, { path: this.opts.path, global: false });
-
     if (!file) {
-        //@todo handle a stack trace of the import ?
-        throw new Error('failed to find ' + name + (this.opts.file ? ' (from ' + this.opts.file + ')' : '') + ' in [ ' + this.opts.path.join(', ') + ' ]');
+        throw new Error(
+            'Failed to find ' + name +
+            (source ? "\n    from " + source : "") +
+            "\n    in [ " +
+            "\n        " + this.opts.path.join(",\n        ") +
+            "\n    ]"
+        );
     }
 
     return file[0];
@@ -140,7 +144,7 @@ function clone(obj) {
  */
 
 module.exports = function (opts) {
-    return function (style) {
+    return function (style, rework) {
         parseStyle(style, opts);
     };
 };

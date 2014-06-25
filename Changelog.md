@@ -1,6 +1,7 @@
-# Unreleased / 2014-07-123
+# 1.1.0 / 2014-07-25
 
 * `transform` option (mainly to use [`css-whitespace`](https://github.com/reworkcss/css-whitespace))
+* better stack trace
 
 # 1.0.0 / 2014-07-14
 
