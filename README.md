@@ -17,22 +17,23 @@ As a Rework plugin:
 ```js
 var imprt = require('rework-import');
 
-// simple usage
 rework(data)
-    .use(imprt({path: 'path/to/your/stylsheets'}))
+    .use(imprt())
     .toString();
+```
 
+Example with all options
+
+```js
 // using multiples paths
 rework(data)
-    .use(imprt({path: [
-        'path/to/your/stylsheets',
-        'node_modules',
-    ]}))
-    .toString();
-
-// with css-whitespace
-rework(data)
-    .use(imprt({transform: require('css-whitespace')}))
+    .use(imprt({
+        path: [
+            'path/to/your/stylesheets',
+            'node_modules',
+        ]
+        transform: require('css-whitespace')
+    }))
     .toString();
 ```
 
@@ -48,10 +49,10 @@ Use if your CSS is encoded in anything other than UTF-8.
 #### path
 
 Type: `String|Array`  
-Default: `process.cwd()`
+Default: `process.cwd()` or _dirname of [the rework source](https://github.com/reworkcss/css#cssparsecode-options)_
 
 A string or an array of paths in where to look for files.
-_Note: this is mainly used for the first level import. Nested `@import` will also benefit of the relative dirname of imported files._
+_Note: nested `@import` will additionally benefit of the relative dirname of imported files._
 
 #### transform
 

@@ -81,4 +81,27 @@ describe('imprt()', function () {
             "unexpected error"
         );
     });
+
+    it('should work without a specified path', function () {
+        var original = fs.readFileSync(path.join(fixturesDir, 'original-cwd.css'), 'utf8');
+        var expected = fs.readFileSync(path.join(fixturesDir, 'expected-cwd.css'), 'utf8');
+
+        var css = rework(original)
+            .use(imprt())
+            .toString();
+
+        assert.equal(css, expected);
+    });
+
+    it('should not need `path` option if `source` option has been passed to rework', function () {
+        var source = path.join(fixturesDir, 'original.css');
+        var original = fs.readFileSync(source, 'utf8');
+        var expected = fs.readFileSync(path.join(fixturesDir, 'expected.css'), 'utf8');
+
+        var css = rework(original, {source: source})
+            .use(imprt())
+            .toString();
+
+        assert.equal(css, expected);
+    });
 });

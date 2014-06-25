@@ -15,9 +15,28 @@ var path = require('path');
  */
 
 function Import(style, opts) {
+    var sourceDir
+    if (style.rules.length && style.rules[0].position && style.rules[0].position.source) {
+        sourceDir = path.dirname(style.rules[0].position.source)
+    }
+
     this.opts = opts || {};
-    this.opts.path = (typeof opts.path === 'string' ? [opts.path] : (opts.path || [process.cwd()]));
-    this.opts.transform = opts.transform || function(value) { return value };;
+
+    this.opts.path = (
+        // convert string to an array or single element
+        typeof this.opts.path === 'string' ?
+        [this.opts.path] :
+        (this.opts.path || []) // fallback to empty array
+    );
+    // if source available, prepend sourceDir in the path array
+    if (sourceDir && this.opts.path.indexOf(sourceDir) === -1) {
+        this.opts.path.unshift(sourceDir);
+    }
+    // if we got nothing for the path, just use cwd
+    if (this.opts.path.length === 0) {
+        this.opts.path.push(process.cwd());
+    }
+    this.opts.transform = this.opts.transform || function(value) { return value };
     this.rules = style.rules || [];
 }
 
@@ -144,7 +163,7 @@ function clone(obj) {
  */
 
 module.exports = function (opts) {
-    return function (style, rework) {
+    return function (style) {
         parseStyle(style, opts);
     };
 };
