@@ -1,3 +1,7 @@
+# 1.1.2 / 2014-07-26
+
+* Drop graceful-fs to allow browser usage ([ref](https://github.com/segmentio/myth/issues/76))
+
 # 1.1.1 / 2014-07-26
 
 * Ignore protocol base url
