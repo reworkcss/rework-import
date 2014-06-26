@@ -56,6 +56,12 @@ Import.prototype.process = function () {
         }
 
         var data = parseImport(rule.import);
+
+        // ignore protocol base uri (protocol:// )
+        if (data.path.match(/[a-z]+:\/\//i)) {
+            return rules.push(rule);
+        }
+
         var opts = clone(self.opts);
         opts.source = self._check(data.path, rule.position ? rule.position.source : undefined);
         var dirname = path.dirname(opts.source);
