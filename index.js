@@ -62,7 +62,7 @@ Import.prototype.process = function () {
             return rules.push(rule);
         }
 
-        var opts = clone(self.opts);
+        var opts = cloneOpts(self.opts);
         opts.source = self._check(data.path, rule.position ? rule.position.source : undefined);
         var dirname = path.dirname(opts.source);
 
@@ -149,19 +149,12 @@ function parseStyle(style, opts) {
  * @param {Object} obj
  */
 
-function clone(obj) {
-    if (obj === null || obj !== typeof 'object' ) {
-        return obj;
-    }
-
-    var copy = obj.constructor();
-        for (var attr in obj) {
-            if (obj.hasOwnProperty(attr)) {
-            copy[attr] = obj[attr];
-        }
-    }
-
-    return copy;
+function cloneOpts(obj) {
+    var opts = {};
+    opts.path = obj.path.slice();
+    opts.source = obj.source;
+    opts.transform = obj.transform;
+    return opts;
 }
 
 /**
