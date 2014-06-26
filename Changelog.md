@@ -1,3 +1,7 @@
+# 1.1.1 / 2014-07-26
+
+* Ignore protocol base url
+
 # 1.1.0 / 2014-07-25
 
 * better automatic path (using rework/css.parse source option)
