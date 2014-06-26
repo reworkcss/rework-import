@@ -2,7 +2,7 @@
 
 var css = require('css');
 var findFile = require('find-file');
-var fs = require('graceful-fs');
+var fs = require('fs');
 var parseImport = require('parse-import');
 var path = require('path');
 
