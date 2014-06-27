@@ -1,3 +1,7 @@
+# 1.1.3 / 2014-07-27
+
+* Fix a path stack issue
+
 # 1.1.2 / 2014-07-26
 
 * Drop graceful-fs to allow browser usage ([ref](https://github.com/segmentio/myth/issues/76))
