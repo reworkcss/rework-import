@@ -30,7 +30,7 @@
     "rework"
   ],
   "dependencies": {
-    "css": "^1.6.0",
+    "css": "^2.0.0",
     "find-file": "~0.1.0",
     "parse-import": "~0.1.3"
   },
