@@ -104,5 +104,22 @@ describe('imprt()', function () {
             }
         );
     });
+});
 
+/**
+ * Sourcemap test
+ */
+describe('sourcemap', function(){
+  it('should contain a sourcemap', function(){
+    var input = fs.readFileSync('./test/sourcemap/in.css', 'utf8');
+    var output = fs.readFileSync('./test/sourcemap/out.css', 'utf8');
+    var options = {
+        source: './test/sourcemap/in.css',
+        sourcemap: true
+    };
+    var css = rework(input, options)
+        .use(imprt())
+        .toString(options);
+    assert.equal(css.trim(), output.trim());
+  });
 });
