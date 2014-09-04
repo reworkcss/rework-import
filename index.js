@@ -58,7 +58,7 @@ Import.prototype.process = function () {
         var data = parseImport(rule.import);
 
         // ignore protocol base uri (protocol://url) or protocol-relative (//url)
-        if (data.path.match(/([a-z]+:)?\/\//i)) {
+        if (data.path.match(/^(?:[a-z]+:)?\/\//i)) {
             return rules.push(rule);
         }
 
