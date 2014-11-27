@@ -1,8 +1,6 @@
 # rework-import [![Build Status](http://img.shields.io/travis/reworkcss/rework-import.svg?style=flat)](https://travis-ci.org/reworkcss/rework-import)
 
-Import stylesheets using `@import` and an optional media query. Pass a string or
-an array of paths to the `path` option in where to search for stylesheets.
-Handle recursive & relative imports.
+> Import stylesheets using `@import` and an optional media query
 
 ## Install
 
@@ -12,57 +10,40 @@ $ npm install --save rework-import
 
 ## Usage
 
-As a Rework plugin:
-
 ```js
+var data = require('fs').readFileSync('index.css');
 var imprt = require('rework-import');
 
 rework(data)
-    .use(imprt())
+    .use(imprt({path: 'app/stylesheets'}))
     .toString();
 ```
 
-Example with all options
+## Options
 
-```js
-// using multiples paths
-rework(data)
-    .use(imprt({
-        path: [
-            'path/to/your/stylesheets',
-            'node_modules',
-        ]
-        transform: require('css-whitespace')
-    }))
-    .toString();
-```
-
-### Options
-
-#### encoding
+### encoding
 
 Type: `String`  
 Default: `utf8`
 
-Use if your CSS is encoded in anything other than UTF-8.
+Use if your CSS is encoded in anything other than `UTF-8`.
 
-#### path
+### path
 
-Type: `String|Array`  
-Default: `process.cwd()` or _dirname of [the rework source](https://github.com/reworkcss/css#cssparsecode-options)_
+Type: `Array|String`  
+Default: `process.cwd()` or `__dirname` of [the rework source](https://github.com/reworkcss/css#cssparsecode-options)
 
 A string or an array of paths in where to look for files.
+
 _Note: nested `@import` will additionally benefit of the relative dirname of imported files._
 
-#### transform
+### transform
 
 Type: `Function`  
-Default: `null`
 
-A function to transform the content of imported files. Take one argument (file content) & should return the modified content.  
-Useful if you use [`css-whitespace`](https://github.com/reworkcss/css-whitespace).
+A function to transform the content of imported files. Takes one argument and should return the modified content. Useful if you use [`css-whitespace`](https://github.com/reworkcss/css-whitespace).
 
-## What to expect
+## Example
 
 ```css
 @import "foo.css" (min-width: 25em);
