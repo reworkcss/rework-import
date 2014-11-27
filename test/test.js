@@ -97,11 +97,14 @@ test('show readable trace on import error', function (t) {
 
 test('import stylesheets with sourcemap', function (t) {
     var src = read(fixture('sourcemap/index.css'), 'utf8');
-    var expected = read(fixture('sourcemap/expected.css'), 'utf8').trim();
     var css = rework(src, {source: fixture('sourcemap/index.css')})
         .use(importer())
-        .toString({sourcemap: true});
+        .toString({
+            sourcemap: true,
+            sourcemapAsObject: true
+        });
 
-    t.assert(css === expected);
+    t.assert(css.map.sources[0] === fixture('sourcemap/foo.css'));
+    t.assert(css.map.sources[1] === fixture('sourcemap/index.css'));
     t.end();
 });
