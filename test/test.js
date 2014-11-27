@@ -54,6 +54,17 @@ test('import stylesheets with custom transform', function (t) {
     t.end();
 });
 
+test('import stylesheet with long media query', function (t) {
+    var src = read(fixture('media-query/index.css'), 'utf8');
+    var expected = read(fixture('media-query/expected.css'), 'utf8').trim();
+    var css = rework(src)
+        .use(importer({path: fixture('media-query')}))
+        .toString();
+
+    t.assert(css === expected);
+    t.end();
+});
+
 test('import stylesheets without `path` option', function (t) {
     var src = read(fixture('cwd/index.css'), 'utf8');
     var expected = read(fixture('cwd/expected.css'), 'utf8').trim();

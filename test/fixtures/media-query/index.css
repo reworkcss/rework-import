@@ -1,0 +1,5 @@
+@import 'foo.css' only screen and (min-width: 25em) and (max-width: 75em);
+
+body {
+    background: black;
+}
