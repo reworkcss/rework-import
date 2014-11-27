@@ -1,4 +1,4 @@
-# rework-import [![Build Status](https://travis-ci.org/reworkcss/rework-import.svg?branch=master)](https://travis-ci.org/reworkcss/rework-import)
+# rework-import [![Build Status](http://img.shields.io/travis/reworkcss/rework-import.svg?style=flat)](https://travis-ci.org/reworkcss/rework-import)
 
 Import stylesheets using `@import` and an optional media query. Pass a string or
 an array of paths to the `path` option in where to search for stylesheets.
