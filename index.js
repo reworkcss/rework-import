@@ -95,7 +95,6 @@ function exists(file, src, opts) {
  *
  * @param {String} file
  * @param {Object} opts
- * @param {Function} cb
  * @api private
  */
 

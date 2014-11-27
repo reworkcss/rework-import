@@ -13,6 +13,7 @@ $ npm install --save rework-import
 ```js
 var data = require('fs').readFileSync('index.css');
 var imprt = require('rework-import');
+var rework = require('rework');
 
 rework(data)
     .use(imprt({path: 'app/stylesheets'}))
@@ -46,7 +47,7 @@ A function to transform the content of imported files. Takes one argument and sh
 ## Example
 
 ```css
-@import "foo.css" (min-width: 25em);
+@import 'foo.css' (min-width: 25em);
 
 body {
     background: black;

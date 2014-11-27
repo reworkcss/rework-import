@@ -1,7 +1,7 @@
 # 2.0.0 / 2014-11-27
 
 * Use `url-regex` to check for @imports containing URLs
-* Update `parse-import` to `2.0.0'
+* Update `parse-import` to `2.0.0`
 * Major improvements to code and tests
 
 # 1.2.0 / 2014-07-04
