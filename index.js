@@ -1,160 +1,161 @@
 'use strict';
 
 var css = require('css');
-var findFile = require('find-file');
 var fs = require('fs');
-var parseImport = require('parse-import');
+var globby = require('globby');
+var parse = require('parse-import');
 var path = require('path');
+var urlRegex = require('url-regex');
 
 /**
- * Inline stylesheet using `@import`
+ * Get options
  *
- * @param {Object} style
+ * @param {Array} rules
  * @param {Object} opts
- * @api public
+ * @api private
  */
 
-function Import(style, opts) {
-    var sourceDir
-    if (style.rules.length && style.rules[0].position && style.rules[0].position.source) {
-        sourceDir = path.dirname(style.rules[0].position.source)
+function getOptions(rules, opts) {
+    var dir;
+    var obj = {
+        source: opts.source,
+        transform: opts.transform || function (val) {
+            return val;
+        }
+    };
+
+    obj.path = opts.path || [];
+    obj.path = Array.isArray(obj.path) ? obj.path : [obj.path];
+
+    if (rules.length && rules[0].position && rules[0].position.source) {
+        dir = path.dirname(rules[0].position.source);
     }
 
-    this.opts = opts || {};
+    if (dir && obj.path.indexOf(dir) === -1) {
+        obj.path.unshift(dir);
+    }
 
-    this.opts.path = (
-        // convert string to an array or single element
-        typeof this.opts.path === 'string' ?
-        [this.opts.path] :
-        (this.opts.path || []) // fallback to empty array
-    );
-    // if source available, prepend sourceDir in the path array
-    if (sourceDir && this.opts.path.indexOf(sourceDir) === -1) {
-        this.opts.path.unshift(sourceDir);
+    if (!obj.path.length) {
+        obj.path.push(process.cwd());
     }
-    // if we got nothing for the path, just use cwd
-    if (this.opts.path.length === 0) {
-        this.opts.path.push(process.cwd());
-    }
-    this.opts.transform = this.opts.transform || function(value) { return value };
-    this.rules = style.rules || [];
+
+    return obj;
 }
 
 /**
- * Process stylesheet
+ * Create error
  *
- * @api public
+ * @param {String} file
+ * @param {String} src
+ * @param {Array} paths
+ * @api private
  */
 
-Import.prototype.process = function () {
-    var rules = [];
-    var self = this;
+function createError(file, src, paths) {
+    var err = ['Failed to find ' + file];
 
-    this.rules.forEach(function (rule) {
-        if (rule.type !== 'import') {
-            return rules.push(rule);
-        }
+    if (src) {
+        err.push('from ' + src);
+    }
 
-        var data = parseImport(rule.import);
+    err.push([
+        'in [',
+        '    ' + paths.join(',\n    '),
+        ']'
+    ].join('\n'));
 
-        // ignore protocol base uri (protocol://url) or protocol-relative (//url)
-        if (data.path.match(/^(?:[a-z]+:)?\/\//i)) {
-            return rules.push(rule);
-        }
+    return err.join(' ');
+}
 
-        var opts = cloneOpts(self.opts);
-        opts.source = self._check(data.path, rule.position ? rule.position.source : undefined);
-        var dirname = path.dirname(opts.source);
+/**
+ * Check if a file exists
+ *
+ * @param {String} file
+ * @param {String} src
+ * @param {Object} opts
+ * @api private
+ */
 
-        if (opts.path.indexOf(dirname) === -1 ) {
-            opts.path = opts.path.slice();
-            opts.path.unshift(dirname);
-        }
-
-        var media = data.condition;
-        var res;
-        var content = self._read(opts.source);
-
-        parseStyle(content, opts);
-
-        if (!media || !media.length) {
-            res = content.rules;
-        } else {
-            res = {
-                type: 'media',
-                media: media,
-                rules: content.rules
-            };
-        }
-
-        rules = rules.concat(res);
+function exists(file, src, opts) {
+    var files = opts.path.map(function (dir) {
+        return path.join(dir, file);
     });
 
-    return rules;
-};
+    files = globby.sync(files);
+
+    if (!files.length) {
+        throw new Error(createError(file, src, opts.path));
+    }
+
+    return files[0];
+}
 
 /**
  * Read the contents of a file
  *
  * @param {String} file
- * @api private
- */
-
-Import.prototype._read = function (file) {
-    var data = this.opts.transform(fs.readFileSync(file, this.opts.encoding || 'utf8'), file);
-    var style = css.parse(data, {source: file}).stylesheet;
-
-    return style;
-};
-
-/**
- * Check if a file exists
- *
- * @param {String} name
- * @api private
- */
-
-Import.prototype._check = function (name, source) {
-    var file = findFile(name, { path: this.opts.path, global: false });
-    if (!file) {
-        throw new Error(
-            'Failed to find ' + name +
-            (source ? "\n    from " + source : "") +
-            "\n    in [ " +
-            "\n        " + this.opts.path.join(",\n        ") +
-            "\n    ]"
-        );
-    }
-
-    return file[0];
-};
-
-/**
- * Parse @import in given style
- *
- * @param {Object} style
  * @param {Object} opts
+ * @param {Function} cb
+ * @api private
  */
 
-function parseStyle(style, opts) {
-    var inline = new Import(style, opts);
-    var rules = inline.process();
-
-    style.rules = rules;
+function read(file, opts) {
+    var encoding = opts.encoding || 'utf8';
+    var data = opts.transform(fs.readFileSync(file, encoding));
+    return css.parse(data, {source: file}).stylesheet;
 }
 
 /**
- * Clone object
+ * Run
  *
- * @param {Object} obj
+ * @param {Object} style
+ * @param {Object} opts
+ * @api private
  */
 
-function cloneOpts(obj) {
-    var opts = {};
-    opts.path = obj.path.slice();
-    opts.source = obj.source;
-    opts.transform = obj.transform;
-    return opts;
+function run(style, opts) {
+    opts = getOptions(style.rules, opts || {});
+
+    var rules = style.rules || [];
+    var ret = [];
+
+    rules.forEach(function (rule) {
+        if (rule.type !== 'import') {
+            ret.push(rule);
+            return;
+        }
+
+        var importRule = '@import ' + rule.import + ';';
+        var data = parse(importRule)[0];
+        var pos = rule.position ? rule.position.source : null;
+
+        if (urlRegex().test(data.path)) {
+            ret.push(rule);
+            return;
+        }
+
+        opts.source = exists(data.path, pos, opts);
+
+        if (opts.path.indexOf(path.dirname(opts.source)) === -1) {
+            opts.path.unshift(path.dirname(opts.source));
+        }
+
+        var content = read(opts.source, opts);
+        run(content, opts);
+
+        if (!data.condition || !data.condition.length) {
+            ret = ret.concat(content.rules);
+            return;
+        }
+
+        ret.push({
+            media: data.condition,
+            rules: content.rules,
+            type: 'media'
+        });
+    });
+
+    style.rules = ret;
 }
 
 /**
@@ -163,6 +164,6 @@ function cloneOpts(obj) {
 
 module.exports = function (opts) {
     return function (style) {
-        parseStyle(style, opts);
+        run(style, opts);
     };
 };

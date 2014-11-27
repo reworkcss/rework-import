@@ -1,28 +1,23 @@
 {
   "name": "rework-import",
   "version": "1.2.1",
-  "description": "A rework plugin to read and inline css files via @import",
-  "main": "index.js",
-  "files": [
-    "index.js"
-  ],
-  "repository": "git://github.com/reworkcss/rework-import.git",
+  "description": "A rework plugin to read and inline CSS files via @import",
+  "license": "MIT",
+  "repository": "reworkcss/rework-import",
   "authors": [
+    "Kevin Mårtensson <kevinmartensson@gmail.com>",
     "Jason Campbell <jason@js.la>",
-    {
-      "name": "Kevin Mårtensson",
-      "email": "kevinmartensson@gmail.com",
-      "url": "https://github.com/kevva"
-    },
     "Maxime Thirouin <m@moox.io>"
   ],
-  "license": "MIT",
   "engines": {
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "mocha --reporter list"
+    "test": "node test/test.js"
   },
+  "files": [
+    "index.js"
+  ],
   "keywords": [
     "css",
     "import",
@@ -31,12 +26,13 @@
   ],
   "dependencies": {
     "css": "^2.0.0",
-    "find-file": "~0.1.0",
-    "parse-import": "~0.1.3"
+    "globby": "^1.0.0",
+    "parse-import": "^2.0.0",
+    "url-regex": "^2.1.1"
   },
   "devDependencies": {
+    "ava": "^0.0.4",
     "css-whitespace": "^1.1.0",
-    "mocha": "^1.18.2",
     "rework": "^1.0.0"
   }
 }

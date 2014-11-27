@@ -1,4 +1,8 @@
 @media (min-width: 25em) {
+  html {
+    color: red;
+  }
+
   body {
     background: red;
   }

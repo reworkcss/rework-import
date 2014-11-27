@@ -1,125 +1,107 @@
-/*global describe, it */
 'use strict';
 
+var importer = require('../');
 var path = require('path');
-var fs = require('fs');
-
-var assert = require('assert');
+var fixture = path.join.bind(null, __dirname, 'fixtures');
+var read = require('fs').readFileSync;
 var rework = require('rework');
+var test = require('ava');
 
-var imprt = require('../');
+test('import stylesheet', function (t) {
+    var src = read(fixture('simple/index.css'), 'utf8');
+    var expected = read(fixture('simple/expected.css'), 'utf8').trim();
+    var css = rework(src)
+        .use(importer({path: fixture('simple')}))
+        .toString();
 
-var fixturesDir = path.join(__dirname, 'fixtures')
-var importsDir = path.join(fixturesDir, 'imports')
-
-describe('imprt()', function () {
-    it('should import stylsheets', function () {
-        var original = fs.readFileSync(path.join(fixturesDir, 'simple.css'), 'utf8');
-        var expected = fs.readFileSync(path.join(fixturesDir, 'simple.out.css'), 'utf8');
-
-        var css = rework(original)
-            .use(imprt({ path: importsDir}))
-            .toString();
-
-        assert.equal(css, expected);
-    });
-
-    it('should import stylsheets recursively', function () {
-        var original = fs.readFileSync(path.join(fixturesDir, 'recursive.css'), 'utf8');
-        var expected = fs.readFileSync(path.join(fixturesDir, 'recursive.out.css'), 'utf8');
-
-        var css = rework(original)
-            .use(imprt({ path: importsDir}))
-            .toString();
-
-        assert.equal(css, expected);
-    });
-
-    it('should import stylsheets relatively', function () {
-        var original = fs.readFileSync(path.join(fixturesDir, 'relative.css'), 'utf8');
-        var expected = fs.readFileSync(path.join(fixturesDir, 'relative.out.css'), 'utf8');
-
-        var css = rework(original)
-            .use(imprt({ path: importsDir}))
-            .toString();
-
-        assert.equal(css, expected);
-    });
-
-    it('should support transform', function () {
-        var original = fs.readFileSync(path.join(fixturesDir, 'transform.css'), 'utf8');
-        var expected = fs.readFileSync(path.join(fixturesDir, 'transform.out.css'), 'utf8');
-
-        var css = rework(original)
-            .use(imprt({
-                path: importsDir,
-                transform: require("css-whitespace")
-            }))
-            .toString()
-        assert.equal(css, expected);
-    });
-
-    it('should work without a specified path', function () {
-        var original = fs.readFileSync(path.join(fixturesDir, 'cwd.css'), 'utf8');
-        var expected = fs.readFileSync(path.join(fixturesDir, 'cwd.out.css'), 'utf8');
-
-        var css = rework(original)
-            .use(imprt())
-            .toString();
-
-        assert.equal(css, expected);
-    });
-
-    it('should not need `path` option if `source` option has been passed to rework', function () {
-        var source = path.join(fixturesDir, 'relative-to-source.css');
-        var original = fs.readFileSync(source, 'utf8');
-        var expected = fs.readFileSync(path.join(fixturesDir, 'relative-to-source.out.css'), 'utf8');
-
-        var css = rework(original, {source: source})
-            .use(imprt())
-            .toString();
-
-        assert.equal(css, expected);
-    });
-
-    it('should output readable trace', function () {
-        var source = path.join(importsDir, 'import-missing.css');
-        var original = fs.readFileSync(source, 'utf8');
-        var reworkObj = rework(original, {source: source})
-
-        assert.throws(
-            function() {
-                reworkObj.use(imprt({path: [importsDir, "../node_modules"]}))
-            },
-            function(err) {
-                var expectedError = "Failed to find missing-file.css" +
-                "\n    from " + importsDir + "/import-missing.css" +
-                "\n    in [ " +
-                "\n        " + importsDir + "," +
-                "\n        ../node_modules" +
-                "\n    ]"
-                if ( err instanceof Error && err.message == expectedError ) {
-                    return true
-                }
-            }
-        );
-    });
+    t.assert(css === expected);
+    t.end();
 });
 
-/**
- * Sourcemap test
- */
-describe('sourcemap', function(){
-  it('should contain a sourcemap', function(){
-    var input = fs.readFileSync('./test/sourcemap/in.css', 'utf8');
-    var output = fs.readFileSync('./test/sourcemap/out.css', 'utf8');
-    var options = {
-        source: './test/sourcemap/in.css',
-        sourcemap: true
-    };
-    var css = rework(input, options)
-        .use(imprt())
-        .toString(options);
-    assert.equal(css.trim(), output.trim());
-  });
+test('import stylesheets recursively', function (t) {
+    var src = read(fixture('recursive/index.css'), 'utf8');
+    var expected = read(fixture('recursive/expected.css'), 'utf8').trim();
+    var css = rework(src)
+        .use(importer({path: fixture('recursive')}))
+        .toString();
+
+    t.assert(css === expected);
+    t.end();
+});
+
+test('import stylesheets relatively', function (t) {
+    var src = read(fixture('relative/index.css'), 'utf8');
+    var expected = read(fixture('relative/expected.css'), 'utf8').trim();
+    var css = rework(src)
+        .use(importer({path: fixture('relative')}))
+        .toString();
+
+    t.assert(css === expected);
+    t.end();
+});
+
+test('import stylesheets with custom transform', function (t) {
+    var src = read(fixture('transform/index.css'), 'utf8');
+    var expected = read(fixture('transform/expected.css'), 'utf8').trim();
+    var css = rework(src)
+        .use(importer({
+            path: fixture('transform'),
+            transform: require('css-whitespace')
+        }))
+        .toString();
+
+    t.assert(css === expected);
+    t.end();
+});
+
+test('import stylesheets without `path` option', function (t) {
+    var src = read(fixture('cwd/index.css'), 'utf8');
+    var expected = read(fixture('cwd/expected.css'), 'utf8').trim();
+    var css = rework(src)
+        .use(importer())
+        .toString();
+
+    t.assert(css === expected);
+    t.end();
+});
+
+test('import stylesheets with `path` passed to rework', function (t) {
+    var src = read(fixture('simple/index.css'), 'utf8');
+    var expected = read(fixture('simple/expected.css'), 'utf8').trim();
+    var css = rework(src, {source: fixture('simple/index.css')})
+        .use(importer())
+        .toString();
+
+    t.assert(css === expected);
+    t.end();
+});
+
+test('show readable trace on import error', function (t) {
+    var src = read(fixture('missing/index.css'), 'utf8');
+    var msg = [
+        'Failed to find foo.css in [',
+        '    ' + fixture('missing'),
+        ']'
+    ].join('\n');
+
+    try {
+        rework(src)
+            .use(importer({path: fixture('missing')}))
+            .toString();
+    } catch (err) {
+        t.assert(err);
+        t.assert(err.message === msg);
+        t.end();
+    }
+});
+
+test('import stylesheets with sourcemap', function (t) {
+    var src = read(fixture('sourcemap/index.css'), 'utf8');
+    var expected = read(fixture('sourcemap/expected.css'), 'utf8').trim();
+    var css = rework(src, {source: fixture('sourcemap/index.css')})
+        .use(importer())
+        .toString({sourcemap: true});
+
+    t.assert(css === expected);
+    t.end();
 });

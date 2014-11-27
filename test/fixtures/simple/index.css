@@ -1,0 +1,6 @@
+@import 'http://fonts.googleapis.com/css?family=Roboto+Slab:400,700';
+@import 'foo.css' (min-width: 25em);
+
+body {
+    background: black;
+}
