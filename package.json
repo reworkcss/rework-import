@@ -1,6 +1,6 @@
 {
   "name": "rework-import",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A rework plugin to read and inline CSS files via @import",
   "license": "MIT",
   "repository": "reworkcss/rework-import",
