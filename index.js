@@ -128,7 +128,7 @@ function run(style, opts) {
         var data = parse(importRule)[0];
         var pos = rule.position ? rule.position.source : null;
 
-        if (urlRegex().test(data.path)) {
+        if (urlRegex({ exact: true }).test(data.path)) {
             ret.push(rule);
             return;
         }
