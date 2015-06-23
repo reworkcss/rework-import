@@ -2,11 +2,13 @@
 
 > Import stylesheets using `@import` and an optional media query
 
+
 ## Install
 
 ```bash
 $ npm install --save rework-import
 ```
+
 
 ## Usage
 
@@ -16,9 +18,10 @@ var imprt = require('rework-import');
 var rework = require('rework');
 
 rework(data)
-    .use(imprt({path: 'app/stylesheets'}))
-    .toString();
+	.use(imprt({path: 'app/stylesheets'}))
+	.toString();
 ```
+
 
 ## Options
 
@@ -50,7 +53,7 @@ A function to transform the content of imported files. Takes one argument and sh
 @import 'foo.css' (min-width: 25em);
 
 body {
-    background: black;
+	background: black;
 }
 ```
 
@@ -58,19 +61,20 @@ yields:
 
 ```css
 @media (min-width: 25em) {
-    body {
-        background: red;
-    }
+	body {
+		background: red;
+	}
 
-    h1 {
-        color: grey;
-    }
+	h1 {
+		color: grey;
+	}
 }
 
 body {
-    background: black;
+	background: black;
 }
 ```
+
 
 ## License
 
