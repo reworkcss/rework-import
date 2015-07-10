@@ -74,7 +74,7 @@ function createError(file, src, paths) {
  */
 
 function createImportError(rule) {
-	var url = rule.import ? rule.import.replace(/\r?\n/g, ' ') : '<no url>';
+	var url = rule.import ? rule.import.replace(/\r?\n/g, '\\n') : '<no url>';
 	var err = ['Bad import url: @import ' + url];
 
 	if (rule.position) {
