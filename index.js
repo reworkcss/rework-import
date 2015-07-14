@@ -67,6 +67,29 @@ function createError(file, src, paths) {
 }
 
 /**
+ * Create bad import rule error
+ *
+ * @param {String} rule
+ * @api private
+ */
+
+function createImportError(rule) {
+	var url = rule.import ? rule.import.replace(/\r?\n/g, '\\n') : '<no url>';
+	var err = ['Bad import url: @import ' + url];
+
+	if (rule.position) {
+		err.push('  starting at line ' + rule.position.start.line + ' column ' + rule.position.start.column);
+		err.push('    ending at line ' + rule.position.end.line + ' column ' + rule.position.end.column);
+
+		if (rule.position.source) {
+			err.push('  in ' + rule.position.source);
+		}
+	}
+
+	return err.join('\n');
+ }
+
+/**
  * Check if a file exists
  *
  * @param {String} file
@@ -126,6 +149,10 @@ function run(style, opts) {
 		var importRule = '@import ' + rule.import + ';';
 		var data = parse(importRule)[0];
 		var pos = rule.position ? rule.position.source : null;
+
+		if (!data) {
+			throw Error(createImportError(rule));
+		}
 
 		if (urlRegex({ exact: true }).test(data.path)) {
 			ret.push(rule);
