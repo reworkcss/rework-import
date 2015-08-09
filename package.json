@@ -5,8 +5,8 @@
   "license": "MIT",
   "repository": "reworkcss/rework-import",
   "authors": [
-    "Kevin Mårtensson <kevinmartensson@gmail.com>",
     "Jason Campbell <jason@js.la>",
+    "Kevin Mårtensson <kevinmartensson@gmail.com>",
     "Maxime Thirouin <m@moox.io>"
   ],
   "engines": {
@@ -33,6 +33,7 @@
   "devDependencies": {
     "ava": "^0.0.4",
     "css-whitespace": "^1.1.0",
+    "normalize-newline": "^1.0.2",
     "rework": "^1.0.0"
   }
 }

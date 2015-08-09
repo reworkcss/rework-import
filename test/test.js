@@ -1,15 +1,20 @@
 'use strict';
-
 var path = require('path');
-var read = require('fs').readFileSync;
+var readFileSync = require('fs').readFileSync;
+var normalizeNewline = require('normalize-newline');
 var rework = require('rework');
 var test = require('ava');
 var importer = require('../');
 var fixture = path.join.bind(null, __dirname, 'fixtures');
 
+function loadFixture(str) {
+	var file = readFileSync(fixture(str), 'utf8');
+	return normalizeNewline(file).trim();
+}
+
 test('import stylesheet', function (t) {
-	var src = read(fixture('simple/index.css'), 'utf8');
-	var expected = read(fixture('simple/expected.css'), 'utf8').trim();
+	var src = loadFixture('simple/index.css');
+	var expected = loadFixture('simple/expected.css');
 	var css = rework(src)
 		.use(importer({path: fixture('simple')}))
 		.toString();
@@ -19,8 +24,8 @@ test('import stylesheet', function (t) {
 });
 
 test('import stylesheets recursively', function (t) {
-	var src = read(fixture('recursive/index.css'), 'utf8');
-	var expected = read(fixture('recursive/expected.css'), 'utf8').trim();
+	var src = loadFixture('recursive/index.css');
+	var expected = loadFixture('recursive/expected.css');
 	var css = rework(src)
 		.use(importer({path: fixture('recursive')}))
 		.toString();
@@ -30,8 +35,8 @@ test('import stylesheets recursively', function (t) {
 });
 
 test('import stylesheets relatively', function (t) {
-	var src = read(fixture('relative/index.css'), 'utf8');
-	var expected = read(fixture('relative/expected.css'), 'utf8').trim();
+	var src = loadFixture('relative/index.css');
+	var expected = loadFixture('relative/expected.css');
 	var css = rework(src)
 		.use(importer({path: fixture('relative')}))
 		.toString();
@@ -41,8 +46,8 @@ test('import stylesheets relatively', function (t) {
 });
 
 test('import stylesheets with custom transform', function (t) {
-	var src = read(fixture('transform/index.css'), 'utf8');
-	var expected = read(fixture('transform/expected.css'), 'utf8').trim();
+	var src = loadFixture('transform/index.css');
+	var expected = loadFixture('transform/expected.css');
 	var css = rework(src)
 		.use(importer({
 			path: fixture('transform'),
@@ -55,8 +60,8 @@ test('import stylesheets with custom transform', function (t) {
 });
 
 test('import stylesheet with long media query', function (t) {
-	var src = read(fixture('media-query/index.css'), 'utf8');
-	var expected = read(fixture('media-query/expected.css'), 'utf8').trim();
+	var src = loadFixture('media-query/index.css');
+	var expected = loadFixture('media-query/expected.css');
 	var css = rework(src)
 		.use(importer({path: fixture('media-query')}))
 		.toString();
@@ -66,8 +71,8 @@ test('import stylesheet with long media query', function (t) {
 });
 
 test('import stylesheets without `path` option', function (t) {
-	var src = read(fixture('cwd/index.css'), 'utf8');
-	var expected = read(fixture('cwd/expected.css'), 'utf8').trim();
+	var src = loadFixture('cwd/index.css');
+	var expected = loadFixture('cwd/expected.css');
 	var css = rework(src)
 		.use(importer())
 		.toString();
@@ -77,8 +82,8 @@ test('import stylesheets without `path` option', function (t) {
 });
 
 test('import stylesheets with `path` passed to rework', function (t) {
-	var src = read(fixture('simple/index.css'), 'utf8');
-	var expected = read(fixture('simple/expected.css'), 'utf8').trim();
+	var src = loadFixture('simple/index.css');
+	var expected = loadFixture('simple/expected.css');
 	var css = rework(src, {source: fixture('simple/index.css')})
 		.use(importer())
 		.toString();
@@ -88,7 +93,7 @@ test('import stylesheets with `path` passed to rework', function (t) {
 });
 
 test('show readable trace on import error', function (t) {
-	var src = read(fixture('missing/index.css'), 'utf8');
+	var src = loadFixture('missing/index.css');
 	var msg = [
 		'Failed to find foo.css in [',
 		'    ' + fixture('missing'),
@@ -107,7 +112,7 @@ test('show readable trace on import error', function (t) {
 });
 
 test('import stylesheets with sourcemap', function (t) {
-	var src = read(fixture('sourcemap/index.css'), 'utf8');
+	var src = loadFixture('sourcemap/index.css');
 	var css = rework(src, {source: fixture('sourcemap/index.css')})
 		.use(importer())
 		.toString({
@@ -115,7 +120,7 @@ test('import stylesheets with sourcemap', function (t) {
 			sourcemapAsObject: true
 		});
 
-	t.assert(css.map.sources[0] === fixture('sourcemap/foo.css'));
-	t.assert(css.map.sources[1] === fixture('sourcemap/index.css'));
+	t.assert(path.resolve(css.map.sources[0]) === fixture('sourcemap/foo.css'));
+	t.assert(path.resolve(css.map.sources[1]) === fixture('sourcemap/index.css'));
 	t.end();
 });
