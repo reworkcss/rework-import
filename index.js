@@ -3,7 +3,7 @@ var fs = require('fs');
 var path = require('path');
 var css = require('css');
 var globby = require('globby');
-var parse = require('parse-import');
+var parseImport = require('parse-import');
 var urlRegex = require('url-regex');
 
 /**
@@ -147,14 +147,14 @@ function run(style, opts) {
 		}
 
 		var importRule = '@import ' + rule.import + ';';
-		var data = parse(importRule)[0];
+		var data = parseImport(importRule)[0];
 		var pos = rule.position ? rule.position.source : null;
 
 		if (!data) {
 			throw Error(createImportError(rule));
 		}
 
-		if (urlRegex({ exact: true }).test(data.path)) {
+		if (urlRegex({exact: true}).test(data.path)) {
 			ret.push(rule);
 			return;
 		}
